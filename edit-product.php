@@ -39,7 +39,7 @@
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
     </div>
-    <<?php include "./includes/footer.php" ?>
+    <?php include "./includes/footer.php" ?>
     <script>
         // Simple form validation
         document.getElementById('editProductForm').addEventListener('submit', function(event) {
