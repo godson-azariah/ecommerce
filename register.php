@@ -1,3 +1,55 @@
+<?php
+require_once "./config.php";
+
+
+if(isset($_POST['submit'])) {
+
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $confirmpassword = $_POST['confirmPassword'];
+    $email = $_POST['email'];
+
+    $select = "SELECT * FROM users WHERE username = '$username' OR email = '$email'";
+    $checkUser = mysqli_query($link, $select);
+
+    if(mysqli_num_rows($checkUser)>0) {
+       echo "<script>
+                alert('this username is already taken');
+             </script>";
+
+    } else {
+        if($password !== $confirmpassword) {
+           echo " <script>
+                    alert('the passwords doesn't match');
+                  </script>";
+        }else{
+            $encrypted_password = password_hash($password, PASSWORD_DEFAULT);
+            $insert = "INSERT INTO users (username,email, password) VALUES ('$username', '$email', '$encrypted_password')";
+            if(mysqli_query($link, $insert)) {
+                echo "<script>
+                        alert('Registration successful');
+                      </script>";
+            header("location: login.php");
+            } else {
+                echo "<script>
+                        alert('Registration failed. Please try again.');
+                      </script>";
+            }
+        }
+    }
+
+}
+
+
+
+
+
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,20 +80,28 @@
                 <i class="bi bi-person-plus brand-icon"></i>
                 <h2 class="fw-bold mt-2">Create Account</h2>
             </div>
-            <form id="registerForm" novalidate>
+            <form id="registerForm" novalidate action ="" method="POST">
                 <div class="mb-3">
-                    <label for="registerEmail" class="form-label">Email or Username</label>
+                    <label for="registerUsername" class="form-label">Username</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                        <input type="text" class="form-control" id="registerEmail" placeholder="Enter email or username" required>
-                        <div class="invalid-feedback">Please enter your email or username.</div>
+                        <input type="text" class="form-control" id="registerUsername" placeholder="Enter Username" name="username"required>
+                        <div class="invalid-feedback">Please enter your username.</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="registerEmail" class="form-label">E-Mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="text" class="form-control" id="registerEmail" placeholder="Enter E-Mail" name="email"required>
+                        <div class="invalid-feedback">Please enter your e-mail.</div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="registerPassword" class="form-label">Password</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" class="form-control" id="registerPassword" placeholder="Password" required>
+                        <input type="password" class="form-control" id="registerPassword" placeholder="Password" name="password"required>
                         <div class="invalid-feedback">Please enter a password.</div>
                     </div>
                 </div>
@@ -49,11 +109,11 @@
                     <label for="registerConfirmPassword" class="form-label">Confirm Password</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                        <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm Password" required>
+                        <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm Password" name="confirmPassword"required>
                         <div class="invalid-feedback" id="confirmPasswordFeedback">Passwords must match.</div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-success w-100 py-2 mt-2">Register</button>
+                <button type="submit" name="submit" class="btn btn-success w-100 py-2 mt-2">Register</button>
             </form>
             <div class="mt-3 text-center">
                 <a href="login.php" class="text-decoration-none">Already have an account? <span class="fw-semibold text-success">Login</span></a>
@@ -82,4 +142,5 @@
         });
     </script>
 </body>
-</html> 
+
+</html>

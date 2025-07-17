@@ -1,3 +1,40 @@
+<?php
+require_once('./config.php');
+
+if (isset($_POST['submit'])) {
+    $name = $_POST['productName'];
+    $description = $_POST['productDescription'];
+    $price = $_POST['productPrice'];
+    $category = $_POST['productCategory'];
+    $user_id = $_SESSION['user_id']; // Replace with $_SESSION['user_id'] later if needed
+
+    $image = $_FILES['productImage']['name'];
+    $tmp = $_FILES['productImage']['tmp_name'];
+    $uploadPath = "uploads/" . basename($image);
+
+    if (move_uploaded_file($tmp, $uploadPath)) {
+        $insert = "INSERT INTO products (name, image_path, product_price, user_id)
+                   VALUES ('$name', '$uploadPath', '$price', '$user_id')";
+
+        if (mysqli_query($link, $insert)) {
+            echo "<script>alert('Product added successfully!');</script>";
+        } else {
+            echo "Failed to insert data: " . mysqli_error($link);
+        }
+    } else {
+        echo "Failed to upload image";
+    }
+}
+?>
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
