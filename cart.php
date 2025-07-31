@@ -60,6 +60,7 @@ session_start();
 
                                 if (mysqli_num_rows($result) > 0) {
                                     while ($row = mysqli_fetch_array($result)) {
+                                        $total_price += $row['product_price'];
                                         ?>
                                         <tr>
                                             <td>
@@ -93,16 +94,13 @@ session_start();
                     <h5 class="fw-bold mb-3">Order Summary</h5>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal</span>
-                        <span>$79.97</span>
+                        <span><?php echo $total_price ?></span>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Shipping</span>
-                        <span>$5.00</span>
-                    </div>
+                    
                     <hr>
                     <div class="d-flex justify-content-between mb-3">
                         <span class="fw-bold">Total</span>
-                        <span class="fw-bold text-primary">$84.97</span>
+                        <span class="fw-bold text-primary"><?php echo $total_price ?></span>
                     </div>
                     <a href="checkout.html" class="btn btn-primary w-100">
                         Proceed to Checkout <i class="bi bi-arrow-right"></i>
